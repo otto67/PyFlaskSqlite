@@ -4,8 +4,9 @@
 <body>
 
 <BR/><BR/>     
-<h2>Add, remove or list members  -- <span id="datetime"></span>  </h2>
+<h2>Add, remove or list members  -- </h2>
 <BR/><BR/>
+
 <script>
     var dt = new Date();
     document.getElementById("datetime").innerHTML = dt.toLocaleDateString();
@@ -97,11 +98,8 @@
         xhr.send();
         xhr.onreadystatechange = function() {
         if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200){
-            alert("Success");
             var data = JSON.parse(xhr.responseText);
-            for (var i in data){
-                alert(data[i]);
-                }
+            window.location.href = '/list_all';
             }
         }
     }

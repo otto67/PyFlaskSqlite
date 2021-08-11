@@ -33,8 +33,14 @@ def add_member():
 @app.route('/list_all_members', methods=['GET'])
 def list_all_members():
     mylist = print_all()
-    template_context = jsonify(mylist)
+    session['input'] = mylist;
+    template_context = jsonify("Success")
     return make_response(template_context)
+
+@app.route('/list_all', methods=['GET'])
+def list_all():
+    mylist = session['input']
+    return render_template('memberlist.html', list_entries=mylist)
 
 
 @app.route('/find_member/<entry_id>', methods=['GET'])
@@ -110,7 +116,7 @@ def remove_entry(id):
 def print_all():
     conn = sqlite3.connect('member.db')
     if not conn:
-        return "-1"
+        return None
 
     c = conn.cursor()
     c.execute("SELECT * FROM members")
