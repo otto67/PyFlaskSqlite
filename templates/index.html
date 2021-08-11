@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<body>
+
+<BR/><BR/>     
+<h2>Add, remove or list members  -- <span id="datetime"></span>  </h2>
+<BR/><BR/>
+<script>
+    var dt = new Date();
+    document.getElementById("datetime").innerHTML = dt.toLocaleDateString();
+
+    function add_member(){
+        // Read from elements and fill into array
+        var strng_arr = [];
+        strng_arr.push(document.getElementById("id").value);
+        strng_arr.push(document.getElementById("fn").value);
+        strng_arr.push(document.getElementById("ln").value);
+        strng_arr.push(document.getElementById("eaddr").value);
+
+        const URL = '/add_member'
+        const xhr = new XMLHttpRequest();
+        sender = JSON.stringify(strng_arr);
+        xhr.open('POST', URL);
+        xhr.send(sender);
+        xhr.onreadystatechange = function() {
+        if (xhr.readyState == XMLHttpRequest.DONE){
+            if (xhr.status == 200){
+                var retval = JSON.parse(xhr.responseText);
+                if (retval.toString().split(',')[0] == "-1")
+                    alert("Sorry. Member with id " + strng_arr[0] + " already exists");
+                else
+                    alert("Success. Added member with id " + retval.toString().split(',')[0]);
+            }
+            else
+                alert("Unsuccessful. Return value is " + xhr.status);
+            }
+        }
+    }
+
+
+    function remove_member() {
+        entry_id = document.getElementById("r_id").value;
+        const URL = "/remove_member/" + entry_id;
+        const xhr = new XMLHttpRequest();
+        sender = JSON.stringify(entry_id);
+
+        xhr.open('GET', URL);
+        xhr.send();
+        xhr.onreadystatechange = function() {
+        if (xhr.readyState == XMLHttpRequest.DONE){
+            if (xhr.status == 200){
+                var retval = JSON.parse(xhr.responseText);
+                if (retval == "0")
+                    alert("Sorry. Member with id " + entry_id + " doesn't exist");
+                else
+                    alert("Successfully removed member " + entry_id);
+            }
+            else
+                alert("Unsuccessful. Return value is " + xhr.status);
+        }
+    }
+}
+
+    function find_member() {
+
+        entry_id = document.getElementById("l_id").value;
+        const URL = "/find_member/" + entry_id;
+        const xhr = new XMLHttpRequest();
+        sender = JSON.stringify(entry_id);
+
+        xhr.open('GET', URL);
+        xhr.send();
+        xhr.onreadystatechange = function() {
+        if (xhr.readyState == XMLHttpRequest.DONE){
+            if (xhr.status == 200){
+                var retval = JSON.parse(xhr.responseText);
+                if (!retval.toString())
+                    alert("Sorry. Member with id " + entry_id + " doesn't exist");
+                else {
+                    alert("Success. Found member " + retval.toString());
+                    document.getElementById("l_id").value = retval.toString()
+                }
+            }
+            else
+                alert("Unsuccessful. Return value is " + xhr.status);
+        }
+    }
+}
+
+    function list_all_members() {
+
+        const URL = '/list_all_members'
+        const xhr = new XMLHttpRequest();
+
+        xhr.open('GET', URL);
+        xhr.send();
+        xhr.onreadystatechange = function() {
+        if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200){
+            alert("Success");
+            var data = JSON.parse(xhr.responseText);
+            for (var i in data){
+                alert(data[i]);
+                }
+            }
+        }
+    }
+
+</script>
+
+<h3>
+    Add member to database
+</h3>
+
+
+<label> Id: </label>
+<input type="text" value="100" id="id">
+<BR/><BR/>
+<label> First name: </label>
+<input type="text" value="Ola" id="fn">
+<BR/><BR/>
+<label> Last name: </label>
+<input type="text" value="Nordmann" id="ln">
+<BR/><BR/>
+<label> Email address: </label>
+<input type="text" value="ola@nordmann.no" id="eaddr">
+<BR/><BR/>
+<input type = "button" onclick = "add_member()" value = "Add member to database" />
+<BR/><BR/>
+
+<h3>
+    Remove member from database
+</h3>
+
+<label> Id: </label>
+<input type="text" value="" id="r_id">
+<BR/><BR/>
+<input type = "button" onclick = "remove_member()" value = "Remove member from database" />
+<BR/><BR/>
+<h3>
+    Find member in database
+</h3>
+
+<label> Id: </label>
+<input type="text" value="" id="l_id">
+<BR/><BR/>
+<input type = "button" onclick = "find_member()" value = "Find member in database" />
+<BR/><BR/>
+<h3>
+    List all members in database
+</h3>
+
+<input type = "button" onclick = "list_all_members()" value = "List all members in database" />
+
+</body>
+</html> 

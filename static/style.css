@@ -1,0 +1,56 @@
+
+body {
+  margin: 25px;
+  background-color: rgb(240,240,240);
+  font-family: arial, sans-serif;
+  font-size: 14px;
+}
+
+/* Applies to all <h1>...</h1> elements. */
+h1  {
+  color: #009;
+  font-size: 2em;
+  margin-bottom: .3em;
+  text-align: center;
+  text-decoration: bold;
+}
+
+table {
+  margin: .3em;
+  width: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+th {
+  padding: .2em;
+}
+
+
+
+tr:nth-child(odd) {
+  background-color: #dd0000;
+}
+
+sup {
+  vertical-align: super;
+  font-size: smaller;
+}
+
+td {
+  background-color: white;
+  border: 2px solid black;
+  padding-left: .5em;
+  padding-right: .5em;
+}
+
+#inputHeader {
+  color: black;
+  font-size: 1.4em;
+  text-align: left;
+/*  text-decoration: underline; */
+}
+
+.centerCell {
+  text-align: left;
+}
