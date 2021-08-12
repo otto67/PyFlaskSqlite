@@ -18,7 +18,7 @@ def index():
 def add_member():
     input_data = request.get_data()
     # session['input'] = input_data.decode()
-    # Convert to list before passing to simulator
+    # Convert to list
     mylist = json.loads(input_data.decode())
     id = int(mylist[0])
     fn = mylist[1]
@@ -33,10 +33,12 @@ def add_member():
 @app.route('/list_all_members', methods=['GET'])
 def list_all_members():
     mylist = print_all()
-    session['input'] = mylist;
+    session['input'] = mylist
     template_context = jsonify("Success")
     return make_response(template_context)
 
+# Web page goes to this URL after list_all_members
+# has returned
 @app.route('/list_all', methods=['GET'])
 def list_all():
     mylist = session['input']
@@ -70,6 +72,10 @@ def create_table():
     conn.close()
 
 def add_row(id, name_1, name_2, email):
+    # Assume database file is in running directory 
+    if not os.path.isfile('member.db'):
+        return -1
+
     conn = sqlite3.connect('member.db')
     c = conn.cursor()
     try:
@@ -83,9 +89,13 @@ def add_row(id, name_1, name_2, email):
     return 0
 
 def find_entry(id):
+    # Assume database file is in running directory
+    if not os.path.isfile('member.db'):
+        return "0"
+
     conn = sqlite3.connect('member.db')
     if not conn:
-        return None
+        return "0"
 
     print("Find entry: id is: ", id)
     c = conn.cursor()
@@ -95,6 +105,10 @@ def find_entry(id):
     return retval
 
 def remove_entry(id):
+    # Assume database file is in running directory
+    if not os.path.isfile('member.db'):
+        return None
+
     conn = sqlite3.connect('member.db')
     if not conn:
         return None
@@ -107,13 +121,16 @@ def remove_entry(id):
         conn.commit()
         conn.close()
     except:
-        print("Failed to remove entry")
         conn.close()
         retval = None
 
     return retval
 
 def print_all():
+    # Assume database file is in running directory
+    if not os.path.isfile('member.db'):
+        return None
+
     conn = sqlite3.connect('member.db')
     if not conn:
         return None
